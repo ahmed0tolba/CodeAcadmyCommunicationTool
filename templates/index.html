@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CodeAcadmy Communication Tool</title>
+    <link rel="icon" href="../static/images/logo.png">
+</head>
+<style>
+    body {
+        background-color: rgb(247, 255, 247);
+
+    }
+
+    textarea {}
+
+    div {}
+
+    #evaluate_code_beginner_task1_p1,
+    #button_ask_chatgpt,
+    #button_finish {
+        cursor: pointer;
+        background-color: #ceffed;
+        transition-duration: 0.4s;
+
+    }
+
+    #evaluate_code_beginner_task1_p1:hover,
+    #button_finish:hover {
+        background: #90EE90;
+        transition: all 0.8s
+    }
+
+    .div_history {
+        margin-bottom: .5em;
+        border: green solid 1px;
+        border-radius: .5em;
+
+    }
+
+    .div_left_task1,
+    .div_right_task1 {
+        width: 45%;
+        display: inline-block;
+        vertical-align: top;
+        padding: .5em;
+        height: 100%;
+
+
+    }
+
+    .div_left_task1 {
+        border-right: green solid 1px;
+    }
+
+    .div_right_task1 {
+        border-left: green solid 1px;
+    }
+
+    .p_right_task1,
+    .p_left_task1 {
+        background-color: rgb(202, 255, 228);
+        border-radius: .5em;
+        padding: .5em;
+
+    }
+
+    .p_left_task1_date,
+    .p_right_task1_date {
+        display: none;
+    }
+</style>
+
+<script>
+    // document.oncontextmenu = Do_Not_Copy();
+    function Do_Not_Copy() {
+        console.log("don't copy");
+        alert("This activity aims to learning GPT prompt writing, Please don't copy text to chatGPT");
+    }
+    function validate_ID() {
+        return true;
+        id = document.getElementById("student_id").value;
+        // console.log(id);
+        if (id.length < 5) {
+            document.getElementById("student_idmessage").innerHTML = "invalid ID";
+            return false;
+        }
+        return true;
+    }
+
+    answers = 1;
+    const div_ids = [];  // none repeative ids
+    function makeid() {
+        let length = 6
+        let result = '';
+        let counter = 0;
+        while (counter < length || div_ids.includes(result)) {
+            result = '';
+            counter = 0;
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const charactersLength = characters.length;
+            while (counter < length) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                counter += 1;
+            }
+        }
+        div_ids.push(result);
+        return result;
+    }
+
+    function Texarea_Height() {
+        document.getElementById("system_msg").style.display = "none";
+        text_areas = document.getElementsByTagName("textarea");
+        for (text_area of text_areas) {
+            text_area.style.height = (text_area.scrollHeight - 13) + "px";
+        }
+    }
+
+    current_level = "beginner";
+    current_task = "1";
+
+    function get_ascii(s) {
+        let ascii_string = "";
+        for (let i = 0; i < s.length; i++) {
+            ascii_string += " " + s.charCodeAt(i);
+        }
+        return ascii_string;
+    }
+
+    function button_submit_task(task_number) {
+        subject = document.getElementById("subject_id").value;
+        if (document.getElementById("subject_id").value.length < 3) {
+            document.getElementById("subject_idmessage").style.display = "inline-block";
+            document.getElementById("subject_idmessage").innerHTML = "Invalid Input";
+            return;
+        }
+        if (!validate_ID()) {
+            return
+        }
+        if (task_number == 1) {
+            var textarea_code_beginner_task_send = get_ascii(document.getElementById("textarea_code_beginner_task1").value);//.replace(/\n/g, " <br> ");
+            if (textarea_code_beginner_task_send.length < 10) {
+                document.getElementById("system_msg_task1").style.display = "block";
+                document.getElementById("system_msg_task1").innerHTML = "Invalid Input";
+                return;
+            }
+            document.getElementById("button_submit_task1").disabled = true;
+            document.getElementById("textarea_code_beginner_task1").disabled = true;
+        }
+        if (task_number == 2) {
+            var textarea_code_beginner_task_send = get_ascii(document.getElementById("textarea_code_beginner_task2").value); //.replace(/\n/g, " <br> ");
+            if (textarea_code_beginner_task_send.length < 10) {
+                document.getElementById("system_msg_task2").style.display = "block";
+                document.getElementById("system_msg_task2").innerHTML = "Invalid Input";
+                return;
+            }
+            document.getElementById("button_submit_task2").disabled = true;
+            document.getElementById("textarea_code_beginner_task2").disabled = true;
+        }
+        if (task_number == 3) {
+            var textarea_code_beginner_task_send = get_ascii(document.getElementById("textarea_code_beginner_task3").value); //.replace(/\n/g, " <br> ");
+            if (textarea_code_beginner_task_send.length < 10) {
+                document.getElementById("system_msg_task3").style.display = "block";
+                document.getElementById("system_msg_task3").innerHTML = "Invalid Input";
+                return;
+            }
+            document.getElementById("button_submit_task3").disabled = true;
+            document.getElementById("textarea_code_beginner_task3").disabled = true;
+        }
+        var user_id = document.getElementById("student_id").value;
+
+
+
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.responseText == "-1") {
+                    if (task_number == 1) {
+                        document.getElementById("system_msg_task1").innerText = "answer already submited before";
+                        document.getElementById("system_msg_task1").style.display = "block";
+                    }
+                    if (task_number == 2) {
+                        document.getElementById("system_msg_task2").innerText = "answer already submited before";
+                        document.getElementById("system_msg_task2").style.display = "block";
+                    }
+                    if (task_number == 3) {
+                        document.getElementById("system_msg_task3").innerText = "answer already submited before";
+                        document.getElementById("system_msg_task3").style.display = "block";
+                    }
+                    console.log("answer already submited before");
+                    document.getElementById("feedback").style.display = "block";
+
+                }
+                else if (this.responseText == "0") {
+                    if (task_number == 1) {
+                        document.getElementById("system_msg_task1").innerText = "Answer Saved";
+                        document.getElementById("system_msg_task1").style.display = "block";
+                        document.getElementById("system_msg_task1").style.color = "green";
+                    }
+                    if (task_number == 2) {
+                        document.getElementById("system_msg_task2").innerText = "Answer Saved";
+                        document.getElementById("system_msg_task2").style.display = "block";
+                        document.getElementById("system_msg_task2").style.color = "green";
+                    }
+                    if (task_number == 3) {
+                        document.getElementById("system_msg_task3").innerText = "Answer Saved";
+                        document.getElementById("system_msg_task3").style.display = "block";
+                        document.getElementById("system_msg_task3").style.color = "green";
+                    }
+                    document.getElementById("feedback").style.display = "block";
+                }
+                else {
+                    console.log(this.responseText);
+                    //window.open("/download?full_path=" + this.responseText, "_blank");
+                    if (task_number == 1) {
+                        document.getElementById("system_msg_task1").innerText = "Not Saved, Please report answer to developer";
+                        document.getElementById("system_msg_task1").style.display = "block";
+                        document.getElementById("system_msg_task1").style.color = "red";
+                    }
+                    if (task_number == 2) {
+                        document.getElementById("system_msg_task2").innerText = "Not Saved, Please report answer to developer";
+                        document.getElementById("system_msg_task2").style.display = "block";
+                        document.getElementById("system_msg_task2").style.color = "red";
+                    }
+                    if (task_number == 3) {
+                        document.getElementById("system_msg_task3").innerText = "Not Saved, Please report answer to developer";
+                        document.getElementById("system_msg_task3").style.display = "block";
+                        document.getElementById("system_msg_task3").style.color = "red";
+                    }
+                    document.getElementById("feedback").style.display = "block";
+
+                }
+            }
+        };
+
+        xhttp1.open("POST", "/store_task?id=" + user_id + "&task_number=" + task_number + "&subject=" + subject + "&code_beginner_task=" + textarea_code_beginner_task_send);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+    }
+
+    function level_change() {
+
+        document.getElementById("task1").style.display = "none";
+        document.getElementById("task2").style.display = "none";
+        document.getElementById("task3").style.display = "none";
+        if (document.getElementById("target_task").value == "Beginner") {
+            document.getElementById("task1").style.display = "";
+            send_start_task(1);
+        }
+        if (document.getElementById("target_task").value == "Advanced") {
+            document.getElementById("task2").style.display = "";
+            send_start_task(2);
+        }
+        if (document.getElementById("target_task").value == "Intermediate") {
+            document.getElementById("task3").style.display = "";
+            send_start_task(3);
+        }
+
+    };
+
+    function send_start_task(task_number) {
+        var user_id = document.getElementById("student_id").value;
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.responseText == "-1") {
+                }
+            }
+        }
+        xhttp1.open("POST", "/store_start_time?id=" + user_id + "&task_number=" + task_number);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+    }
+
+    function open_chatgpt() {
+        window.open("/chatgpt?id=" + document.getElementById("student_id").value, "_blank");
+    }
+
+    function subject_id_changed() {
+        document.getElementById("subject_idmessage").disabled = true;
+    }
+
+    function student_id_changed() {
+        if (document.getElementById("student_id").value.length == 7) {
+            document.getElementById("target_task").disabled = false;
+            document.getElementById("button_submit_task1").disabled = false;
+            document.getElementById("button_submit_task2").disabled = false;
+            document.getElementById("button_submit_task3").disabled = false;
+
+        } else {
+            document.getElementById("target_task").disabled = true;
+            document.getElementById("button_submit_task1").disabled = true;
+            document.getElementById("button_submit_task2").disabled = true;
+            document.getElementById("button_submit_task3").disabled = true;
+
+        }
+    }
+
+</script>
+
+<body>
+    <h2 style="text-align:center;color: green;">CodeAcadmy Communication Tool</h2>
+    <div
+        style="color: green;direction: rtl;margin: 1em;line-height:150%;border:1px solid green;border-radius:1em;padding:1em">
+        <b>
+            عزيزي الطالب،
+            <br>
+            يسعدنا أن نقدم لك أداة CodeAcadmy لتجربتك تعليم البرمجة باستخدام ChatGPT تأكد من اتباع الخطوات التالية:
+        
+        </b>
+        <br>
+        &emsp;1. أدخل الرقم الجامعي (7 أرقام)
+        <br>
+        &emsp;2. حدد مستوى الصعوبة
+        <br>
+        &emsp;3. سيتم تقديم مهمة برمجة ، والتي سوف تتطلب منك كتابة الكود اللازم. إذا كنت بحاجة إلى مساعدة ، يمكنك  الضغط إلى زر OpenGPT لتستطيع السؤال  او تلقي الإرشادات لإكمال التجربة. يمكنك استخدام اللغة الإنجليزية أو اللغة العربية لطلب المساعدة عند استخدام OpenGPT.
+        <br>
+        &emsp;4. اكتب الاجابة في الحقل المحدد.
+        <br>
+        &emsp;5.  يمكن اختيار مستوى اخر لحل سؤال مختلف.
+        <br>
+        &emsp;6. بعد إكمال التجربة، سيظهر لك رابط التقييم للتجربة (google form)قم بفتحه وتقييم التجربة باستخدام نفس الرقم الجامعي.
+
+    </div>
+    <br>
+    <div style="color: green;margin: 1em;border:1px solid green;border-radius:1em;padding:1em">
+        <b>Dear student, </b>
+        <br>
+        &emsp;We are excited to introduce you to the CodeAcadmy tool that can help you learn programming by using ChatGPT. Please follow the Steps for completing a programming task:
+        <br>
+        &emsp;1.	Enter university ID (7 digits)
+        <br>
+        &emsp;2.	Select the level of difficulty
+        <br>
+        &emsp;3.	A programming task will be presented, which will require you to write the necessary code. If you require assistance, you can access the OpenGPT button to receive guidance for completing the task.  You may either use English or Arabic language to ask for assistance when using the OpenGPT.
+        <br>
+        &emsp;4.	Past/write the code in the given field provided.
+        <br>
+        &emsp;5.	An option is given to redo the task at a different level.
+        <br>
+        &emsp;6.	Finally, after completing the task, you will need to click on the "Evaluate" button and assess your performance on the task by completing a Google form.
+    </div>
+    <br>
+    <div style="margin: 1em;background-color: rgb(0, 211, 0);border-radius: 10px;padding:1em;border: solid 3px green;">
+
+        <label for="Subject">
+            Enter Subject:
+        </label>
+        <input type="text" id="subject_id" name="subject_id" placeholder=""
+            onfocus='document.getElementById("subject_idmessage").innerHTML = "";' oninput="subject_id_changed()">
+        <span id="subject_idmessage" style="color:red"></span>
+        &emsp;
+
+        <label for="ID">
+            Enter ID:
+        </label>
+        <input type="number" id="student_id" name="student_id" placeholder=""
+            onfocus='document.getElementById("student_idmessage").innerHTML = "";' oninput="student_id_changed()">
+        <span id="student_idmessage" style="color:red"></span>
+        &emsp;
+        <label for="Level">
+            Select Level:
+        </label>
+        <select id="target_task" name="target_task" style="border-radius: .3em;" onchange="level_change()" disabled>
+            <option value="" selected>Select...</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+        &emsp;
+        &emsp;
+        <button class="" id="open_chatgpt" style="padding: .5em;border-radius: .5em;display: inline-block;"
+            onclick="open_chatgpt()">
+            Open ChatGPT
+        </button>
+
+    </div>
+    <div id="task1" style="display: none;">
+        <div id="task1_p1">
+
+            <div style="width:95%;display: inline-block;margin-bottom: 1em;">
+                <div style="width:63%;min-width: 400px;display: inline-block;">
+                    <div onselectstart="Do_Not_Copy()">
+                        <h2 style="text-align: center;">Beginner Tasks1</h2>
+                        <b>Write a program to ask the user to enter two integer numbers (A and B) and use the two integers to calculate the value of C using the following formula: 
+                            <span style="white-space: nowrap;">C = tan (B &times; 2 &#247;  A &times; 4)</span> and display the value of C.
+
+                        </b>
+                        <br>
+                        <br>
+                    </div>
+
+                    write python code:
+                    <textarea type="text" id="textarea_code_beginner_task1" name="textarea_code_beginner_task1" value=""
+                        style="border-radius: 10px;padding: .5em;width: 95%;height: 4em;"
+                        oninput="Texarea_Height()"></textarea>
+                    <p id="system_msg_task1" style="color: red;display: none;">
+                    </p>
+                </div>
+                <div
+                    style="width:30%;display: inline-block;background-color: rgb(168, 255, 222);border-radius: 1em;padding: 1em;vertical-align: top;margin: 1em;">
+                    <b>Hints:</b> you must use:<br>
+                    Math function<br>
+                    Eval function<br>
+                    Input function<br>
+                    Print function<br>
+
+                    <br>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text_areas" style="width: 60%;display: inline-block;">
+            <button class="" id="button_submit_task1" style="padding: .5em;border-radius: .5em;display: block;"
+                onclick="button_submit_task(1)">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <div id="task2" style="display: none;">
+        <div id="task2_p1">
+            <div onselectstart="Do_Not_Copy()">
+                <h2 style="text-align: center;">Advanced Tasks3</h2>
+
+                <b>This experiment measures the students ability to use chatGPT to find solutions to advanced
+                    programming problems.</b><br>
+
+                The <a href="static/books.txt" download><b>books.txt</b></a> file has the following information about 30
+                books, 'book_id', 'title', 'author', 'publisher', 'year', and 'genre'.
+                <br>
+                Write a python script to read the book info from the file, and store them in list of books.
+                <br>
+                The script prints the following menu to the user:
+                <br>
+                Sorting books with<br>
+                (1) book_id<br>
+                (2) title<br>
+                (3) author<br>
+                (4) publisher<br>
+                (5) year_published<br>
+                (6) genre<br>
+                Enter your selection: <br>
+                Then, according to the user selection, the list is sorted and printed in a tabular format. <br>
+                After checking the format of the <a href="static/books.txt" download><b>books.txt</b></a> file, consult
+                chatGPT engine to write the script as described above. <br>
+                The sample output is provided here: <a href="https://youtu.be/VNByJdSSlq8" target="_blank"><b>Video
+                        Link</b></a> and as a pdf here: <a href="https://goo.by/heskR" target="_blank"><b>PDF FILE
+                        Download</b></a>
+
+                <br>
+                <br>
+            </div>
+
+            write code here:
+            <textarea type="text" id="textarea_code_beginner_task2" name="textarea_code_beginner_task2" value=""
+                style="border-radius: 10px;padding: .5em;width: 95%;height: 4em;" oninput="Texarea_Height()"></textarea>
+            <p id="system_msg_task2" style="color: red;display: none;">
+            </p>
+
+        </div>
+
+        <div class="text_areas" style="width: 60%;display: inline-block;">
+            <button class="" id="button_submit_task2" style="padding: .5em;border-radius: .5em;display: block;"
+                onclick="button_submit_task(2)">
+                Submit
+            </button>
+        </div>
+
+    </div>
+
+    <div id="task3" style="display: none;">
+        <div id="task3_p1">
+            
+
+            <div onselectstart="Do_Not_Copy()">
+                <h2 style="text-align: center;">Intermediate Tasks2</h2>
+                <b>Write a program that asks the user to enter two numbers to calculate the results using the formula: <br>
+                    <span style="white-space: nowrap; line-height: 2em;">Results = &radic;<span style="text-decoration:overline;"> &nbsp;base &times; x &sup2; &nbsp;</span> </span> <br>
+                    if the results is greater than or equal to 20 display the following:<br><br>
+                    1 <br>
+                    1 1<br>
+                    1 1 1<br>
+                    1 1 1 1 <br>
+                    1 1 1 1 1<br><br>
+                    Otherwise, display the following:<br><br>
+                    1 1 1 1 1<br>
+                    1 1 1 1<br>
+                    1 1 1<br>
+                    1 1<br>
+                    1<br>
+
+                </b>                
+
+                <br>
+                <br>
+            </div>
+
+            write code here:
+            <textarea type="text" id="textarea_code_beginner_task3" name="textarea_code_beginner_task3" value=""
+                style="border-radius: 10px;padding: .5em;width: 95%;height: 4em;" oninput="Texarea_Height()"></textarea>
+            <p id="system_msg_task3" style="color: red;display: none;">
+            </p>
+
+        </div>
+
+        <div class="text_areas" style="width: 60%;display: inline-block;">
+            <button class="" id="button_submit_task3" style="padding: .5em;border-radius: .5em;display: block;"
+                onclick="button_submit_task(3)">
+                Submit
+            </button>
+        </div>
+
+    </div>
+
+
+    <div id="feedback" style="display: none;">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf-N1RbD2Q6QYN503lCJBLXUN2wckcX3_5INu9sGpibmSziNg/viewform">
+            Evaluate your experience using ChatGPT.
+    </div>
+
+</body>
+
+</html>

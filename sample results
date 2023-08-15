@@ -1,0 +1,86 @@
+write code to ask the user to enter 2 integer numbers (A and B) and use the 2 integers to calculate the C value using the following formula: C = tan (B × 2 ÷ A × 4) and print C
+replace int with eval
+
+
+A = int(input("Please enter the first integer: "))
+B = int(input("Please enter the second integer: "))
+
+C = math.tan(B * 2 / A * 4)
+
+print("The calculated C value is:", C)
+
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    int A, B;
+    double C;
+    
+    printf("Please enter an integer for A: ");
+    scanf("%d", &A);
+    printf("Please enter an integer for B: ");
+    scanf("%d", &B);
+    
+    C = tan((B * 2.0)/(A * 4.0));
+    
+    printf("The value of C is %f\n", C);
+    
+    return 0;
+}
+
+
+
+the following code should  ask the user to enter 2 integer numbers (A and B) and use the 2 integers to calculate the C value using the following formula:   C = tan (B ∗ 2/A ∗ 4) and print the output C
+
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    int A, B;
+    double C;
+    
+    printf("Please enter an integer for A: ");
+    scanf("%d", &A);
+    printf("Please enter an integer for B: ");
+    scanf("%d", &B);
+    
+    C = tan((B * 2.0)/(A * 4.0));
+    
+    printf("The value of C is %f\n", C);
+    
+    return 0;
+}
+
+Is it correct? 
+
+import math
+A = int(input('Please enter an integer for A: '))
+B = int(input('Please enter an integer for B: '))
+C = math.tan(B * 2 / (A * 4))
+print('The C value is:', C)
+
+import math 
+A = int(input('Please enter an integer for A: '))
+B = int(input('Please enter an integer for B: '))
+if A>0 and B>0:
+    C = math.tan(B * 2 / (A * 4))
+    print('The C value is:', C)
+else:
+    print("error A and B must be more than 0")
+
+import math 
+A = int(input('Please enter an integer for A: '))
+B = int(input('Please enter an integer for B: '))
+if A<=0:
+    print("error A must be more than 0")
+elif B<=0:
+    print("error B must be more than 0")
+else:
+    C = math.tan(B * 2 / (A * 4))
+    print('The C value is:', C)

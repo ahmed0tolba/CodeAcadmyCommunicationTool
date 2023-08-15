@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Marking - CodeAcadmy Communication Tool</title>
+    <link rel="icon" href="../static/images/logo.png">
+</head>
+<style>
+    body {
+        background-color: rgb(247, 255, 247);
+
+    }
+
+    td {}
+
+    .td_scrollable {
+        width: 400px;
+        height: 300px;
+    }
+
+    .div_scrollable {
+        /* white-space: pre-line; */
+        text-align: left;
+        white-space: pre-wrap;
+        width: 400px;
+        height: 300px;
+        overflow: auto;
+    }
+
+    .prof_1_show,
+    .prof_2_show,
+    .prof_3_show {
+        display: none;
+        text-align: left;
+        border-top: solid black 1px;
+        padding-top: .2em;
+    }
+
+    .hidden_for_now {
+        display: none;
+    }
+    .textarea_Comment{
+        border-color: rgba(255, 255, 255, 0); padding: 0%;width: 99%;height: 300px;
+    }
+    #q1_answer_div,#q3_answer_div,#q2_answer_div {
+        display: none;
+        background-color: rgb(70, 70, 70);
+        color: white;
+        width:25%;
+        height: 90%;
+        position: fixed;
+        top:1em;
+        right:1em;
+        border: 1px solid black;
+        border-radius: 1em;
+        white-space: pre-wrap;
+        overflow: auto;
+      }
+</style>
+<script>
+    prof_id = {{ prof_id }};
+    function update_score(inputfield_id_q) {
+        words = inputfield_id_q.split('_');
+        student_id = words[1];
+        task_number = words[2];
+        FERM = words[3]
+        score = document.getElementById(inputfield_id_q).value;
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.responseText == "-1") {
+                }
+            }
+        }
+
+        xhttp1.open("POST", "/update_score?prof_id=" + prof_id + "&student_id=" + student_id + "&task_number=" + task_number + "&FERM=" + FERM + "&score=" + score);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+    }
+
+    function get_ascii(s) {
+        let ascii_string = "";
+        for (let i = 0; i < s.length; i++) {
+            ascii_string += " " + s.charCodeAt(i);
+        }
+        return ascii_string;
+    }
+
+
+    function update_comment(inputfield_id_c) {
+        words = inputfield_id_c.split('_');
+        student_id = words[1];
+        comment = words[2];
+        FERM = words[3]
+        comment = get_ascii(document.getElementById(inputfield_id_c).value);
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.responseText == "-1") {
+                }
+            }
+        }
+
+        xhttp1.open("POST", "/update_comment?prof_id=" + prof_id + "&student_id=" + student_id + "&comment=" + comment);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+    }
+</script>
+
+<body>
+    <div id ="q1_answer_div" onmouseover="hover_ans_q1()" onmouseleave="hide_ans_q1()">
+        Correct Answer should be similar to:
+
+        import math
+
+        A = eval(input("Enter a number"))
+        B = eval(input("Enter a second number"))
+        C = math.tan(B*2/A*4)
+
+        Print (C)
+
+    </div>
+    <div id ="q3_answer_div" onmouseover="hover_ans_q3()" onmouseleave="hide_ans_q3()">
+        Correct Answer should be similar to:
+
+        import math
+
+        base = eval(input("Enter a number"))
+        x = eval(input("Enter a second number"))
+        result = math.sqrt(base*(x**2))
+        
+        if result >= 20:
+            for i in range(5):
+                for j in range(i + 1):
+                    print("1", end=" ")
+                print()
+            
+        else:
+            for i in range(5):
+                for j in range(5 - i):
+                    print("1 ", end=" ")
+                print()
+        
+        OR
+        
+        import math
+        
+        base = eval(input("Enter a number"))
+        x = eval(input("Enter a second number"))
+        result = math.sqrt(base*(x**2))
+        
+        if result >= 20:	
+            print("1\n1 1\n1 1 1  \n1 1 1 1 \n1 1 1 1 1")
+        else:
+            print("1 1 1 1 1 \n1 1 1 1 \n1 1 1  \n1 1 \n1")
+        
+
+    </div>
+    <div id ="q2_answer_div" onmouseover="hover_ans_q2()" onmouseleave="hide_ans_q2()">
+
+        def read_books():
+    # Open the file for reading
+    with open('books.txt', 'r') as f:
+        # Read the lines from the file
+        lines = f.readlines()
+
+    # Create a list to hold the books
+    books = []
+
+    # Loop over the lines and extract the book info
+    for line in lines:
+        # Split the line into fields
+        fields = line.strip().split(', ')
+
+        # Debug statement
+        #print(fields)
+
+        # Extract the book info from the fields
+        book_id = int(fields[0].split(': ')[1])
+        title = fields[1].split(': ')[1][1:-1]
+        author = fields[2].split(': ')[1][1:-1]
+        publisher = fields[3].split(': ')[1][1:-1]
+        year = int(fields[4].split(': ')[1])
+        genre = fields[5].split(': ')[1][1:-1]
+
+        # Create a book object and add it to the list
+        book = {'book_id': book_id, 'title': title, 'author': author, 'publisher': publisher, 'year': year, 'genre': genre}
+        books.append(book)
+
+    return books
+
+
+def print_books(books):
+    # Print the table header
+    print(f"{'Book ID':&lt;10} {'Title':&lt;30} {'Author':&lt;30} {'Publisher':&lt;30} {'Year Published':&lt;15} {'Genre':&lt;20}")
+    print('-' * 120)
+
+    # Loop over the books and print them in a table
+    for book in books:
+        print(f"{book['book_id']:&lt;10} {book['title']:&lt;30} {book['author']:&lt;30} {book['publisher']:&lt;30} {book['year']:&lt;15} {book['genre']:&lt;20}")
+
+
+def sort_books(books, field):
+    # Determine the key function based on the selected field
+    if field == 'book_id':
+        key_func = lambda book: book['book_id']
+    elif field == 'title':
+        key_func = lambda book: book['title']
+    elif field == 'author':
+        key_func = lambda book: book['author']
+    elif field == 'publisher':
+        key_func = lambda book: book['publisher']
+    elif field == 'year_published':
+        key_func = lambda book: book['year']
+    elif field == 'genre':
+        key_func = lambda book: book['genre']
+
+    # Sort the books based on the key function
+    sorted_books = sorted(books, key=key_func)
+
+    return sorted_books
+
+
+# Read the books from the file
+books = read_books()
+
+# Print the initial list of books
+#print_books(books)
+
+# Prompt the user for the sorting field
+selection = input("Sorting books with\n\t(1) book_id\n\t(2) title\n\t(3) author\n\t(4) publisher\n\t(5) year_published\n\t(6) genre\nEnter your selection: ")
+
+# Sort the books based on the user's selection
+if selection == '1':
+    sorted_books = sort_books(books, 'book_id')
+elif selection == '2':
+    sorted_books = sort_books(books, 'title')
+elif selection == '3':
+    sorted_books = sort_books(books, 'author')
+elif selection == '4':
+    sorted_books = sort_books(books, 'publisher')
+elif selection == '5':
+    sorted_books = sort_books(books, 'year_published')
+elif selection == '6':
+    sorted_books = sort_books(books, 'genre')
+else:
+    print("Invalid selection. Sorting by book_id.")
+    sorted_books = sort_books(books, 'book_id')
+
+# Print the sorted list of books
+print_books(sorted_books)
+    </div>
+
+    
+    <div style="padding: .5em;border-radius: .5em; font-size: 150%; display: inline;margin-left: 1em;background-color: rgb(104, 158, 111);color: whitesmoke;">Marking Page</div>
+    <div style="font-size: 120%;font-weight: bold;margin: 1em;padding: 1em;border: solid 2px green;border-radius: 1em;background-color:rgb(211, 250, 211);line-height: 130%;"> 
+    “Please rate the quality of the generated code compared to the reference code for each of the factors listed below.
+    <br>
+    Use the provided rating scale (1 - poor, 2 - fair, 3 - good, 4 - very good, 5 - excellent) to assess the generated
+    code.” In addition the meaning of the used factors are:
+    <br>
+    <u>1. Functional correctness (1-5)</u>: the generated code produces the desired output and behaves identically or similarly
+    to the reference code for various test cases.
+    <br>
+    <u>2. Efficiency (1-5)</u>: the generated code demonstrates optimal or nearly optimal time and space complexity when
+    compared to the reference code.
+    <br>
+    <u>3. Readability (1-5)</u>: the generated code is easy to read and understand, with proper indentation, meaningful
+    variable names, and clear control flow when compared to the reference code.
+    <br>
+    <u>4. Maintainability (1-5)</u>: the generated code demonstrates modularity, adheres to best practices, and is structured
+    in such a way that it can be easily modified and maintained when compared to the reference code.
+    </div>
+    <br>
+    
+    {% if df_results|length > 0 %}
+    <div style="text-align: center;">
+        <table
+            style="border: 2px solid #15245e; margin-top:1em ;margin-left:auto;margin-right:auto;border-collapse: collapse;">
+
+            <tr style="border-bottom: .2em solid black;background-color: rgb(176, 255, 176);">
+                <th>
+                    <div class="tooltip">N
+                        <span class="tooltiptext">
+                        </span>
+                    </div>
+                </th>
+                <th>
+                    <div class="tooltip">ID
+                        <span class="tooltiptext">
+                        </span>
+                    </div>
+                </th>
+                <th style="" onmouseover="show_ans_q1()" onmouseleave="hide_ans_q1()">
+                    <div class="tooltip">Q 1 answer
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th onmouseover="show_ans_q3()" onmouseleave="hide_ans_q3()">
+                    <div class="tooltip">Q 2 answer
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th onmouseover="show_ans_q2()" onmouseleave="hide_ans_q2()">
+                    <div class="tooltip">Q 3 answer
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th style="">
+                    <div class="tooltip">Chat GPT Qs
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="hidden_for_now">
+                    <div class="tooltip">Chat GPT Q count
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="hidden_for_now">
+                    <div class="tooltip">Q 1 time
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="hidden_for_now">
+                    <div class="tooltip">Q 2 time
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="hidden_for_now">
+                    <div class="tooltip">Q 3 time
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+
+                <!-- <th class="prof_1_show">
+                    <div class="tooltip">Q 1 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_1_show">
+                    <div class="tooltip">Q 2 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_1_show">
+                    <div class="tooltip">Q 3 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+
+                <th class="prof_2_show">
+                    <div class="tooltip">Q 1 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_2_show">
+                    <div class="tooltip">Q 2 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_2_show">
+                    <div class="tooltip">Q 3 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+
+                <th class="prof_3_show">
+                    <div class="tooltip">Q 1 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_3_show">
+                    <div class="tooltip">Q 2 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_3_show">
+                    <div class="tooltip">Q 3 Mark
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th> -->
+                <th class="prof_1_show">
+                    <div class="tooltip">Comment
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_2_show">
+                    <div class="tooltip">Comment
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+                <th class="prof_3_show">
+                    <div class="tooltip">Comment
+                        <span class="tooltiptext"></span>
+                    </div>
+                </th>
+
+
+            </tr>
+            {% for item in df_results %}
+            <tr style="border-bottom: .2em solid black;">
+                <td style="border-right: .1em solid black; padding: .1em;">{{loop.index}}</td>
+                <td style="border-right: .1em solid black; padding: .1em;">{{item[0]}}</td>
+                <td class="td_scrollable" style="border-right: .1em solid black; padding: .1em;text-align: left;" >
+                    <div class="div_scrollable" style="">
+                        {{item[1] | safe}}
+                    </div>
+                    <div class="prof_1_show" style="">
+                        Functional correctness:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_1_F" min="0" max="5" value="{{item[9]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_1_F')"><br>
+                        Efficiency:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_1_E" min="0" max="5" value="{{item[10]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_1_E')"><br>
+                        Readability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_1_R" min="0" max="5" value="{{item[11]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_1_R')"><br>
+                        Maintainability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_1_M" min="0" max="5" value="{{item[12]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_1_M')">
+                    </div>
+                    <div class="prof_2_show" style="">
+                        Functional correctness:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_1_F" min="0" max="5" value="{{item[21]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_1_F')"><br>
+                        Efficiency:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_1_E" min="0" max="5" value="{{item[22]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_1_E')"><br>
+                        Readability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_1_R" min="0" max="5" value="{{item[23]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_1_R')"><br>
+                        Maintainability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_1_M" min="0" max="5" value="{{item[24]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_1_M')">
+                    </div>
+                    <div class="prof_3_show" style="">
+                        Functional correctness:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_1_F" min="0" max="5" value="{{item[33]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_1_F')"><br>
+                        Efficiency:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_1_E" min="0" max="5" value="{{item[34]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_1_E')"><br>
+                        Readability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_1_R" min="0" max="5" value="{{item[35]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_1_R')"><br>
+                        Maintainability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_1_M" min="0" max="5" value="{{item[36]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_1_M')">
+                    </div>
+                </td>
+                <td class="td_scrollable" style="border-right: .1em solid black; padding: .1em;text-align: left;">
+                    <div class="div_scrollable" style="">
+                        {{item[3] | safe}}
+                    </div>
+                    <div class="prof_1_show" style="">
+                        Functional correctness:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_3_F" min="0" max="5" value="{{item[17]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_3_F')"><br>
+                        Efficiency:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_3_E" min="0" max="5" value="{{item[18]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_3_E')"><br>
+                        Readability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_3_R" min="0" max="5" value="{{item[19]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_3_R')"><br>
+                        Maintainability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_3_M" min="0" max="5" value="{{item[20]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_3_M')">
+                    </div>
+                    <div class="prof_2_show" style="">
+                        Functional correctness:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_3_F" min="0" max="5" value="{{item[29]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_3_F')"><br>
+                        Efficiency:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_3_E" min="0" max="5" value="{{item[30]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_3_E')"><br>
+                        Readability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_3_R" min="0" max="5" value="{{item[31]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_3_R')"><br>
+                        Maintainability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_3_M" min="0" max="5" value="{{item[32]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_3_M')">
+                    </div>
+                    <div class="prof_3_show" style="">
+                        Functional correctness:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_3_F" min="0" max="5" value="{{item[41]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_3_F')"><br>
+                        Efficiency:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_3_E" min="0" max="5" value="{{item[42]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_3_E')"><br>
+                        Readability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_3_R" min="0" max="5" value="{{item[43]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_3_R')"><br>
+                        Maintainability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_3_M" min="0" max="5" value="{{item[44]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_3_M')">
+                    </div>
+                    
+                </td>
+                <td class="td_scrollable" style="border-right: .1em solid black; padding: .1em;text-align: left;"  >
+                    <div class="div_scrollable" style="">
+                        {{item[2] | safe}}
+                    </div>
+                    <div class="prof_1_show" style="">
+                        Functional correctness:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_2_F" min="0" max="5" value="{{item[13]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_2_F')"><br>
+                        Efficiency:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_2_E" min="0" max="5" value="{{item[14]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_2_E')"><br>
+                        Readability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_2_R" min="0" max="5" value="{{item[15]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_2_R')"><br>
+                        Maintainability:
+                        <input class="prof_1" type="number" id="p1in_{{item[0]}}_2_M" min="0" max="5" value="{{item[16]}}"
+                            disabled onchange="update_score('p1in_{{item[0]}}_2_M')">
+                    </div>
+                    <div class="prof_2_show" style="">
+                        Functional correctness:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_2_F" min="0" max="5" value="{{item[25]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_2_F')"><br>
+                        Efficiency:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_2_E" min="0" max="5" value="{{item[26]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_2_E')"><br>
+                        Readability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_2_R" min="0" max="5" value="{{item[27]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_2_R')"><br>
+                        Maintainability:
+                        <input class="prof_2" type="number" id="p2in_{{item[0]}}_2_M" min="0" max="5" value="{{item[28]}}"
+                            disabled onchange="update_score('p2in_{{item[0]}}_2_M')">
+                    </div>
+                    <div class="prof_3_show" style="">
+                        Functional correctness:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_2_F" min="0" max="5" value="{{item[37]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_2_F')"><br>
+                        Efficiency:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_2_E" min="0" max="5" value="{{item[38]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_2_E')"><br>
+                        Readability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_2_R" min="0" max="5" value="{{item[39]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_2_R')"><br>
+                        Maintainability:
+                        <input class="prof_3" type="number" id="p3in_{{item[0]}}_2_M" min="0" max="5" value="{{item[40]}}"
+                            disabled onchange="update_score('p3in_{{item[0]}}_2_M')">
+                    </div>
+                </td>
+                <td class="td_scrollable" style="border-right: .1em solid black; padding: .1em;text-align: left;">
+                    <div class="div_scrollable" style="">
+                        {{item[4] | safe}}
+                    </div>
+                </td>
+                <td class="hidden_for_now" style="border-right: .1em solid black; padding: .1em;">{{item[5]}}</td>
+                <td class="hidden_for_now" style="border-right: .1em solid black; padding: .1em;">{{item[6]}}</td>
+                <td class="hidden_for_now" style="border-right: .1em solid black; padding: .1em;">{{item[7]}}</td>
+                <td class="hidden_for_now" style="border-right: .1em solid black; padding: .1em;">{{item[8]}}</td>
+                
+                <td class="prof_1_show" style="border-right: .1em solid black; padding: 0em;"><textarea class="textarea_Comment" type="text" id="p1in_{{item[0]}}_C" name="p1in_{{item[0]}}_C" value=""
+                    onblur="update_comment('p1in_{{item[0]}}_C')">{{item[45]}}</textarea>
+
+                </td>
+                <td class="prof_2_show" style="border-right: .1em solid black; padding: 0em;"><textarea class="textarea_Comment" type="text" id="p2in_{{item[0]}}_C" name="p2in_{{item[0]}}_C" value=""
+                    onblur="update_comment('p2in_{{item[0]}}_C')">{{item[46]}}</textarea>
+
+                </td>
+                <td class="prof_3_show" style="border-right: .1em solid black; padding: 0em;"><textarea class="textarea_Comment" type="text" id="p3in_{{item[0]}}_C" name="p3in_{{item[0]}}_C" value=""
+                    onblur="update_comment('p3in_{{item[0]}}_C')">{{item[47]}}</textarea>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+</body>
+
+<script>
+    prof_id = {{ prof_id }};
+
+
+
+    if (prof_id == 1) {
+        var elements = document.getElementsByClassName("prof_1");
+        for (var x = 0; x < elements.length; x++) {
+            elements[x].disabled = false;
+        }
+        var elementss = document.getElementsByClassName("prof_1_show");
+        for (var x = 0; x < elementss.length; x++) {
+            elementss[x].style.display = "table-cell";
+        }
+    }
+
+    if (prof_id == 2) {
+        var elements = document.getElementsByClassName("prof_2");
+        for (var x = 0; x < elements.length; x++) {
+            elements[x].disabled = false;
+        }
+        var elementss = document.getElementsByClassName("prof_2_show");
+        for (var x = 0; x < elementss.length; x++) {
+            elementss[x].style.display = "table-cell";
+        }
+    }
+
+    if (prof_id == 3) {
+        var elements = document.getElementsByClassName("prof_3");
+        for (var x = 0; x < elements.length; x++) {
+            elements[x].disabled = false;
+        }
+        var elementss = document.getElementsByClassName("prof_3_show");
+        for (var x = 0; x < elementss.length; x++) {
+            elementss[x].style.display = "table-cell";
+        }
+    }
+
+    
+    timeoutId1 = 0
+    timeoutId3 = 0
+    timeoutId2 = 0
+    function show_ans_q1(){
+        document.getElementById("q1_answer_div").style.display = "block";
+    }
+    function hide_ans_q1(){        
+        timeoutId1 = setTimeout(function(){document.getElementById("q1_answer_div").style.display = "none";}, 3000); 
+    }
+    function show_ans_q2(){
+        document.getElementById("q2_answer_div").style.display = "block";
+    }
+    function hide_ans_q2(){
+        timeoutId2 = setTimeout(function(){document.getElementById("q2_answer_div").style.display = "none";}, 3000); 
+    }
+    function show_ans_q3(){
+        document.getElementById("q3_answer_div").style.display = "block";
+    }
+    function hide_ans_q3(){
+        timeoutId3 = setTimeout(function(){document.getElementById("q3_answer_div").style.display = "none";}, 3000); 
+    }
+
+    function hover_ans_q1(){
+        clearTimeout(timeoutId1);
+    }
+    function hover_ans_q2(){
+        clearTimeout(timeoutId2);
+    }
+    function hover_ans_q3(){
+        clearTimeout(timeoutId3);
+    }
+
+</script>
+
+</html>

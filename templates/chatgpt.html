@@ -1,0 +1,202 @@
+<html>
+<head>
+    <title>CodeAcadmy Communication Tool</title>
+<link rel="icon" href="../static/images/logo.png">
+</head>
+<style>
+    .div_history{
+        border: solid 1px green;
+        border-radius: .5em;
+        padding: .5em;     
+        margin-top: .1em;   
+    }
+    .div_left_task1{
+        padding: .5em; 
+        border-radius: .5em;
+        background-color: rgba(139, 137, 1, 0.13);
+    }
+    .div_right_task1{
+        margin-top: .5em;
+        padding: .5em; 
+        border-radius: .5em;
+        background-color: rgba(0, 255, 200, 0.13);
+    }
+</style>
+<script>
+
+    function student_id_changed(){
+        if ( document.getElementById("student_id").value.length == 7){
+            document.getElementById("button_ask_chatgpt").disabled = false;
+            
+        }else{
+            document.getElementById("button_ask_chatgpt").disabled = true;
+
+        }
+    }
+    function Texarea_Height() {
+        document.getElementById("system_msg").style.display = "none";
+        text_areas = document.getElementsByTagName("textarea");
+        for (text_area of text_areas) {
+            text_area.style.height = (text_area.scrollHeight - 13) + "px";
+        }
+    }
+
+    function get_ascii(s) {
+        let ascii_string = "";
+        for (let i = 0; i < s.length; i++) {
+            ascii_string += " " + s.charCodeAt(i);
+        }
+        return ascii_string;
+    }
+
+    last_respond = "";
+    answers = 1;
+    function textarea_ask_chatgpt() {
+        if (!validate_ID()) {
+            return
+        }
+        
+        var textarea_ask_chatgpt_display = document.getElementById("textarea_ask_chatgpt").value;//.replace(/\n/g, " <br> ");
+        var textarea_ask_chatgpt_send = get_ascii(document.getElementById("textarea_ask_chatgpt").value);//.replace(/\n/g, " ");
+        var id = document.getElementById("student_id").value;
+        // console.log(textarea_code_beginner_task1_p1);
+
+        document.getElementById("textarea_ask_chatgpt").disabled = true;
+        document.getElementById("button_ask_chatgpt").disabled = true;
+
+        var options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        var request_date = new Date().toLocaleDateString("da-DK", options);
+
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                // console.log(this.responseText);
+                if (this.responseText === "-3"){
+                    document.getElementById("student_idmessage").innerHTML = "Can't use ChatGPT after answer is submitted";
+                    return;
+                }
+                if (this.responseText === "-1" || this.responseText === "-2" ) {
+                    document.getElementById("student_idmessage").innerHTML = "Invalid";
+                } else {
+                    resp = this.responseText;
+                    if (resp.length < 5) {
+                        resp = "error, api busy, try again later"
+                    }
+                    console.log(resp);
+                    // missing 
+
+                    var respond_date = new Date().toLocaleDateString("da-DK", options);
+
+                    // document.getElementById("feedback_" + id).style.display = "block";
+                    let div = document.getElementById("history");
+
+                    content = "";
+                    content = content + "<div class='div_history'>"
+                    content = content + "<div class='div_left_task1'>";
+                    content = content + "<b>Student Asked " + answers + " : </b>";
+                    content = content + "<p class='p_left_task1'> ";
+                    content = content + textarea_ask_chatgpt_display;
+                    content = content + "</p>";
+                    // content = content + "<p class='p_left_task1_date'>";
+                    // content = content + request_date;
+                    // content = content + "</p>";
+                    content = content + "</div>";
+
+                    content = content + "<div class='div_right_task1'>";
+                    content = content + "<b>ChatGPT Answered " + answers + " : </b>";
+                    content = content + "<p class='p_right_task1'>";
+                    content = content + resp.replace(/\n/g, " <br> ");
+                    content = content + "</p>";
+                    // content = content + "<p class='p_right_task1_date'>";
+                    // content = content + respond_date;
+                    // content = content + "</p>";
+                    content = content + "</div>";
+                    content = content + " </div>  ";
+
+                    let div_previous_code_title = document.createElement("div");
+                    div_previous_code_title.innerHTML = content;
+                    div.append(div_previous_code_title);
+
+                    document.getElementById("textarea_ask_chatgpt").disabled = false;
+                    document.getElementById("button_ask_chatgpt").disabled = false;
+                    document.getElementById("textarea_ask_chatgpt").value = "";
+                    document.getElementById("textarea_ask_chatgpt").style.height = "3em";
+
+                    last_respond += "Human: " + textarea_ask_chatgpt_display + "\n AI: " + resp;
+                    answers++;
+
+                }
+            }
+        };
+
+        xhttp1.open("POST", "/ask_chatgpt?id=" + id + "&text=" + textarea_ask_chatgpt_send + "&last_respond=" + get_ascii(last_respond));
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+    }
+
+    function validate_ID() {
+        return true;
+        id = document.getElementById("student_id").value;
+        // console.log(id);
+        if (id.length != 7) {
+            document.getElementById("student_idmessage").innerHTML = "invalid ID";
+            return false;
+        }
+
+        return true;
+    }
+
+
+</script>
+
+<body>
+    <h2 style="text-align:center;color: green;">CodeAcadmy Communication Tool</h2>
+    <div style="color: green;margin: 1em;border:1px solid green;border-radius:1em;padding:1em">
+        <b>Dear student, </b>
+        <br>
+        &emsp;We are excited to introduce you to CodeAcadmy tool that can help you learn programming in a fun and
+        interactive way.
+        With ChatGPT, you can improve your coding skills by completing tasks that are tailored to your level of
+        experience.
+        To get started, simply choose your programming level and begin working on the tasks provided.
+    </div>
+    <br>
+    <div style="background-color: rgb(0, 211, 0);margin: 1em;border-radius: 10px;padding:1em;border: solid 3px green;">
+        <label for="ID">
+            Enter ID:
+        </label>
+        <input type="number" id="student_id" name="student_id" placeholder=""
+            onfocus='document.getElementById("student_idmessage").innerHTML = "";' oninput="student_id_changed()">
+        <span id="student_idmessage" style="color:red"></span>
+        &emsp;
+
+    </div>
+
+    <br>
+<div id = "history">
+
+</div>
+    <div style="padding-right:1em;padding-left:1em">
+
+    <br>
+    <label for="text_area" id="text_area_label" style="vertical-align: middle;">
+        Ask chatgpt for hints:
+    </label>
+    <br>
+    <textarea type="text" id="textarea_ask_chatgpt" name="textarea_ask_chatgpt" value=""
+        style="border-radius: 10px;padding: .5em;width: 90%;height: 4em;" oninput="Texarea_Height()"></textarea>
+    <button class="" id="button_ask_chatgpt"
+        style="padding: .5em;border-radius: .5em;display: inline-block;vertical-align: top;"
+        onclick="textarea_ask_chatgpt()">
+        Ask
+    </button>
+</div>
+</body>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    document.getElementById("student_id").value = id;
+    student_id_changed();
+</script>
+</html>
